@@ -1,4 +1,4 @@
-
+ 
 from Ventana import *;
 from Entity import *;
 from EntityJugador import *;
@@ -13,7 +13,7 @@ pygame.font.init()
 
 #creando la ventana 
 screen = Ventana(800,800)
-jugador = Jugador("C:/Users/ignac/Desktop/plataform-main/saltooptimized-main/carpetaSprite/fan.png",400,600,4,50,50,15,0.5)
+jugador = Jugador("C:/Users/ignac/Desktop/plataform-main/saltooptimized-main/carpetaSprite/fan.png",400,550,4,50,50,15,0.5)
 plataformas = CrearPlataformas(5)
 plataformas.crearArrayPlataformas()
 colisiones = Colisiones(jugador,plataformas,screen)
@@ -21,6 +21,7 @@ monedas = Monedas(5)
 monedas.crearMonedas()
 mapa = Mapa()
 mapa.recorriendoTexto()
+bala = Entity("C:/Users/ignac/Desktop/plataform-main/saltooptimized-main/carpetaSprite/disparo.png", 450, 550, 16,16)
 
 
 controles = Controles()
@@ -34,20 +35,33 @@ while running:
             running = False
     screen.screen.fill("white")
     
+    
+    
     mapa.pintarMapa(screen.screen)
-    mapa.moverMapa(controles)
     controles.KeyDetection()
-    jugador.movimiento(controles)
-    plataformas.moverPlataformas(controles)
+    
+    
+    jugador.movimiento(controles,mapa)
+    mapa.moverMapa(controles,jugador)
+    plataformas.moverPlataformas(controles,mapa,jugador)
     plataformas.pintarP(screen.screen)
     colisiones.ColisionDetection()
     jugador.ColisionPlataforma()
     jugador.gravedad()
-    jugador.pintar(screen.screen)
+    
+    
     monedas.pintarMonedas(screen.screen)
-    monedas.moverMonedas(controles)
+    monedas.moverMonedas(controles,mapa,jugador)
     monedas.elimMonedas(jugador)
     monedas.iniciar_animacion()
+    jugador.disparo()
+    jugador.moverDisparo()
+    jugador.dibujarDisparo(screen.screen)
+    jugador.pintar(screen.screen)
+   
+    
+
+    
     
     ContadorFps(clock, screen.screen, font)
     

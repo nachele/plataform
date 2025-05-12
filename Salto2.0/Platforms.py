@@ -11,11 +11,11 @@ class CrearPlataformas:
     def pintarP(self,screen):
         for i in range(len(self.arrayPlataformas) - 1):
             self.arrayPlataformas[i].pintar(screen)
-    def moverPlataformas(self, controles):
-        if controles.D:
-            for i in range(len(self.arrayPlataformas) - 1):
-                self.arrayPlataformas[i].x -= self.velocidadPlataformas
-        if controles.A:
-            for i in range(len(self.arrayPlataformas) - 1):
-                self.arrayPlataformas[i].x += self.velocidadPlataformas
-        
+    def moverPlataformas(self, controles, mapa,jugador):
+            if controles.D and jugador.x >= 400:
+                for i in range(len(self.arrayPlataformas) - 1):
+                    self.arrayPlataformas[i].x -= self.velocidadPlataformas
+            if controles.A and mapa.mapaNoseMueve == False:
+                for i in range(len(self.arrayPlataformas) - 1):
+                    self.arrayPlataformas[i].x += self.velocidadPlataformas
+                

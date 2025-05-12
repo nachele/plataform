@@ -12,15 +12,18 @@ class Monedas:
         self.animacion_activa = False 
         self.ind = -1
         self.indx =0
+
+    #Crea mete en array monedas un Entity con la imagen de la moneda y la posicion en x y en y
     def crearMonedas(self):
         for i in range(self.index):
-            self.monedas.append(Entity("C:/Users/ignac/Desktop/plataform-main/saltooptimized-main/carpetaSprite/moneda.png", 200 * i, 50 * i, 60, 60))
+            self.monedas.append(Entity("C:/Users/ignac/Desktop/plataform-main/saltooptimized-main/carpetaSprite/moneda.png", 200 * i, (100 * i) - 100, 60, 60))
+    #pinta las monedas que estan en el array
 
     def pintarMonedas(self, screen):
         for i in range(len(self.monedas) - 1 ):
             if self.monedas[i] is not None:
                 self.monedas[i].pintar(screen)
-
+    #elimina las monedas cuando el jugador entra en contacto
     def elimMonedas(self, jugador):
         for i in range(len(self.monedas) - 1):
             if self.monedas[i] is not None:
@@ -31,22 +34,25 @@ class Monedas:
                         if self.monedas[i] is not None:
                             del self.monedas[i]
                             self.monedasCogidas += 1
-
-    def moverMonedas(self, controles):
-        for i in range(len(self.monedas) - 1):
-            if controles.D:
-                self.monedas[i].x -= self.velociadMonedas
-            if controles.A:
-                self.monedas[i].x += self.velociadMonedas
-
+    #cuando el jugador se mueve hacia la izquierda o hacia la derecha las monedas se mueven en direccion opuesta para que e la sensacion de que estan quietas
+    def moverMonedas(self, controles, mapa,jugador):
+          
+                for i in range(len(self.monedas) - 1):
+            
+                    if controles.D and jugador.x >= 400:
+                        self.monedas[i].x -= self.velociadMonedas
+                    if controles.A and mapa.mapaNoseMueve == False:
+                        self.monedas[i].x += self.velociadMonedas
+    #se cambian las imagenes de las monedas para que de la sensacion de que rotan
     def animacionMonedas(self):
         for i in range(33):
             time.sleep(0.1)
-            for x in range(len(self.monedas)):
+            for x in range(len(self.monedas) - 1):
+                imagen = pygame.image.load("C:/Users/ignac/Desktop/plataform-main/saltooptimized-main/carpetaSprite/moneda" + str(i) +  ".png")
+                imagen = pygame.transform.scale(imagen, (70,70))
                  #self.monedas[x] = Entity("C:/Users/ignac/Desktop/plataform-main/saltooptimized-main/carpetaSprite/moneda" + str(i) +  ".png", 200 * x, 50 * x, 60, 60)
-                self.monedas[x].imagen = pygame.image.load("C:/Users/ignac/Desktop/plataform-main/saltooptimized-main/carpetaSprite/moneda" + str(i) +  ".png")
+                self.monedas[x].imagen = imagen
         self.animacion_activa = False
-    
 
 
                
@@ -54,7 +60,7 @@ class Monedas:
         
             
             
-
+    # se llama a la funcion animacion monedas en un hilo aparte  para que no se bloquee la ejecucion del programa
     def iniciar_animacion(self):
         # Creamos el hilo para la animación
         if not self.animacion_activa:

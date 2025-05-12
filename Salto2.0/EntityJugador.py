@@ -1,15 +1,12 @@
 
 from Entity import *
 from Controles import *
+import threading
 import time
 class Jugador(Entity):
     def __init__(self, imagen,posX,posY,speed,transX,transY,fuerzaSalto,deceleracion):
         super().__init__(imagen,posX,posY,transX,transY)
         self.speed = speed
-
-
-        
-       
         self.ancho = transX
         self.alto = transY
         self.saltando = False
@@ -24,24 +21,33 @@ class Jugador(Entity):
         self.enPlataforma = False
         self.graviti = 0.1
         self.gravedadInicial = 0.1
+        self.shoot = False
+        self.balas = []
 
-
-    def movimiento(self, controles):   
+    def imprimirXY(self):
+        print("x : " + str(self.x) + " y : " + str(self.y))
+    def movimiento(self, controles, mapa):   
+        
         if(controles.W == True):
            #self.y -= self.speed
            pass
         if(controles.A == True):
-            pass
+            if(mapa.mapaNoseMueve and self.x > 0):
+                self.x -= self.speed
 
         if(controles.S == True):
             #self.y += self.speed
             pass
 
         if(controles.D == True):
-            pass
+            if(self.x <= 400):
+                self.x +=  self.speed
+        
         # espacio
         if(controles.SP == True):
             self.saltando = True
+        if(controles.K == True):
+            self.shoot = True
 
 
     
@@ -75,9 +81,24 @@ class Jugador(Entity):
         if(self.choquePie and self.enPlataforma):
             self.saltando = False
             self.graviti = self.gravedadInicial
+    def disparo(self):
+        if(self.shoot):
+            self.balas.append( Entity("C:/Users/ignac/Desktop/plataform-main/saltooptimized-main/carpetaSprite/disparo.png", self.x + self.ancho,self.y + self.alto - self.alto/2 , 16,16) )
+            self.shoot = False
+    def moverDisparo(self):
+            if(len(self.balas) > 0):
+                for i in range(len(self.balas)):
+                    self.balas[i]. x += 10
 
+    def dibujarDisparo(self,screen):
+         if(len(self.balas) > 0):
+                for i in range(len(self.balas) ):
+                    self.balas[i].pintar(screen)
+                    
+    
+    def hilodisparo(self):
+        pass
         
-            
 
 
         
